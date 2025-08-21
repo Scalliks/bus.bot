@@ -12,7 +12,7 @@ now = datetime.now(sa_timezone)
 load_dotenv()
 
 API_TOKEN = os.environ.get("API_TOKEN")
-WEBHOOK_URL = os.environ.get("https://bus-bot-1.onrender.com")
+WEBHOOK_URL = os.environ.get('https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY')
 
 
 stop_names = {
