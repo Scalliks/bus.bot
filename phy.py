@@ -1,8 +1,12 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+import pytz
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+
+sa_timezone = pytz.timezone("Asia/Sakhalin")
+now = datetime.now(sa_timezone)
 
 load_dotenv()
 
@@ -177,7 +181,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         stop_id = [k for k, v in stop_names.items() if v == text][0]
         day_type = "weekday" if datetime.today().weekday() < 5 else "weekend"
         times = bus_schedule.get(stop_id, {}).get(day_type, [])
-        now = datetime.now()
+        now = datetime.now(sa_timezone )
         next_bus = None
         following_bus = None
         for t in times:
