@@ -11,8 +11,7 @@ now = datetime.now(sa_timezone)
 
 load_dotenv()
 
-API_TOKEN = os.environ.get("API_TOKEN")
-WEBHOOK_URL = os.environ.get('https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY')
+API_TOKEN = os.environ.get("7844184267:AAFsuO7mv-fgyX5gBuF1qIm3Y0vP-f8sQoc")
 
 
 stop_names = {
@@ -239,10 +238,23 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ======= Запуск бота =======
 
+
 app = ApplicationBuilder().token(API_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
     
-app.bot.set_webhook(WEBHOOK_URL)
 
+
+PORT = int(os.environ.get('PORT', 10000))
+DOMAIN = 'https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY'
+WEBHOOK_URL=f'https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY/{API_TOKEN}'
+import asyncio
+asyncio.run(app.bot.set_webhook(WEBHOOK_URL))
+
+app.run_webhook(
+    listen='0.0.0.0',
+    port=PORT,
+    url_path=API_TOKEN,
+    webhook_url=WEBHOOK_URL
+)
