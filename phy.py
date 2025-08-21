@@ -11,7 +11,7 @@ now = datetime.now(sa_timezone)
 
 load_dotenv()
 
-API_TOKEN = os.environ.get("7844184267:AAFsuO7mv-fgyX5gBuF1qIm3Y0vP-f8sQoc")
+API_TOKEN = os.environ.get("API_TOKEN")
 
 
 stop_names = {
