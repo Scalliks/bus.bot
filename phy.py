@@ -1,16 +1,19 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters, CallbackContext
 import pytz
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from flask import Flask, request
 
 sa_timezone = pytz.timezone("Asia/Sakhalin")
 now = datetime.now(sa_timezone)
 
 load_dotenv()
 
-API_TOKEN = os.getenv("API_TOKEN")
+API_TOKEN = os.environ.get("API_TOKEN")
+WEBHOOK_URL = os.environ.get("https://bus-bot-1.onrender.com")
+
 
 stop_names = {
     "newr_to": "🚏 Артиллерийская-2",
@@ -235,10 +238,11 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
 # ======= Запуск бота =======
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(API_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
-    
 
-    app.run_polling()
+app = ApplicationBuilder().token(API_TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
+
+    
+app.bot.set_webhook(WEBHOOK_URL)
+
