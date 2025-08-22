@@ -4,7 +4,6 @@ import pytz
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
-from flask import Flask, request
 
 sa_timezone = pytz.timezone("Asia/Sakhalin")
 now = datetime.now(sa_timezone)
@@ -12,6 +11,8 @@ now = datetime.now(sa_timezone)
 load_dotenv()
 
 API_TOKEN = os.environ.get("API_TOKEN")
+WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+PORT = int(os.environ.get('PORT', 5000))
 
 
 stop_names = {
@@ -243,18 +244,10 @@ app = ApplicationBuilder().token(API_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
-    
-
-
-PORT = int(os.environ.get('PORT', 10000))
-DOMAIN = 'https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY'
-WEBHOOK_URL=f'https://api.render.com/deploy/srv-d2jd77fdiees73c35rt0?key=r66QJW-E1cY/{API_TOKEN}'
 import asyncio
-asyncio.run(app.bot.set_webhook(WEBHOOK_URL))
-
-app.run_webhook(
+if __name__=='__main__':
+    asyncio.run(app.run_webhook(
     listen='0.0.0.0',
     port=PORT,
-    url_path=API_TOKEN,
     webhook_url=WEBHOOK_URL
-)
+))
