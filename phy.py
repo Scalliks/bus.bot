@@ -244,13 +244,9 @@ app = ApplicationBuilder().token(API_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
-import asyncio
-async def main():
-    await app.initialize()
-    await app.updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=API_TOKEN)
-    await app.bot.set_webhook(url=f"{WEBHOOK_URL}/{API_TOKEN}")
-    print(f'Bot is running on {WEBHOOK_URL}')
-    await app.idle()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+app.run_webhook(
+    listen="0.0.0.0",
+    port=PORT,
+    url_path=API_TOKEN,
+    webhook_url=f"{WEBHOOK_URL}/{API_TOKEN}"
+)
