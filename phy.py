@@ -189,17 +189,16 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         following_bus = None
         for t in times:
     # Приведение времени расписания к локальному часовому поясу
-            bus_time_localized = sa_timezone.localize(datetime.strptime(t, "%H:%M")).replace(year=now.year, month=now.month, day=now.day)
+             # создаём объект времени автобуса в нужном дне
+            bus_time_naive = datetime.strptime(t, "%H:%M").replace(
+                year=now.year, month=now.month, day=now.day
+            )
+            bus_time = sa_timezone.localize(bus_time_naive)
 
-            # Если время отправления автобуса ещё впереди
-            if bus_time_localized >= now:
-        # Первый подходящий рейс становится ближайшим
-                if not next_bus:
-                    next_bus = bus_time_localized
-        # Второй подходящий рейс станет вторым ближайшим
-                elif not following_bus:
-                    following_bus = bus_time_localized
-                break  # Останавливаемся, как только нашли первый будущий рейс
+            if bus_time >= now and not next_bus:
+                next_bus = bus_time
+            elif bus_time >= now and next_bus and not following_bus:
+                following_bus = bus_time
 
         msg_text = ( 
             f"📍 Остановка: {text}\n"
