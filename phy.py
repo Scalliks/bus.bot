@@ -182,13 +182,13 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Остановка
     if text in stop_names.values():
         stop_id = [k for k, v in stop_names.items() if v == text][0]
-        day_type = "weekday" if datetime.today().weekday() < 5 else "weekend"
+        day_type = "weekday" if datetime.now(sa_timezone).weekday() < 5 else "weekend"
         times = bus_schedule.get(stop_id, {}).get(day_type, [])
         now = datetime.now(sa_timezone)
         next_bus = None
         following_bus = None
         for t in times:
-            bus_time = datetime.strptime(t, "%H:%M").replace(year=now.year, month=now.month, day=now.day)
+            bus_time = sa_timezone.localize(datetime.strptime(t, "%H:%M").replace(year=now.year, month=now.month, day=now.day))
             if bus_time >= now and not next_bus:
                 next_bus = bus_time
             elif bus_time >= now and next_bus and not following_bus:
