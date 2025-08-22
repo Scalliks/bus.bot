@@ -188,7 +188,9 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         next_bus = None
         following_bus = None
         for t in times:
-            bus_time = sa_timezone.localize(datetime.strptime(t, "%H:%M").replace(year=now.year, month=now.month, day=now.day))
+            bus_time = datetime.strptime(t, "%H:%M").replace(
+            year=now.year, month=now.month, day=now.day, tzinfo=sa_timezone
+        )
             if bus_time >= now and not next_bus:
                 next_bus = bus_time
             elif bus_time >= now and next_bus and not following_bus:
