@@ -245,15 +245,12 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
 import asyncio
-if __name__=='__main__':
+async def main():
+    await app.initialize()
+    await app.updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=API_TOKEN)
+    await app.bot.set_webhook(url=f"{WEBHOOK_URL}/{API_TOKEN}")
+    print(f'Bot is running on {WEBHOOK_URL}')
+    await app.idle()
 
-    async def main():
-        await app.start()
-        await app.updater.start_webhook(
-            listen='0.0.0.0',
-            port=PORT,
-            webhook_url=WEBHOOK_URL
-        )
-        print(f'Bot is running on {WEBHOOK_URL}')
-        await app.updater.idle()
+if __name__ == "__main__":
     asyncio.run(main())
