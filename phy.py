@@ -196,7 +196,11 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             elif bus_time >= now and next_bus and not following_bus:
                 following_bus = bus_time
 
-        msg_text = f"📅 Сегодня: {ru_days[now.weekday()]}\n⏰ Сейчас: {now.strftime('%H:%M')}\n"
+        msg_text = ( 
+            f"🛑 Вы выбрали остановку: {text}\n"
+            f"📅 Сегодня: {ru_days[now.weekday()]}\n"
+            f"⏰ Сейчас: {now.strftime('%H:%M')}\n"
+        )
         if next_bus:
             delta_next = int((next_bus - now).total_seconds() // 60)
             msg_text += f"⏳ Ближайший автобус: {next_bus.strftime('%H:%M')} ({delta_next} мин)\n"
@@ -246,9 +250,5 @@ app = ApplicationBuilder().token(API_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
-app.run_webhook(
-    listen="0.0.0.0",
-    port=PORT,
-    url_path=API_TOKEN,
-    webhook_url=f"{WEBHOOK_URL}/{API_TOKEN}"
-)
+if __name__ == "__main__":
+    app.run_polling()
