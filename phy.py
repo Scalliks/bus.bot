@@ -197,7 +197,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 following_bus = bus_time
 
         msg_text = ( 
-            f"🛑 Вы выбрали остановку: {text}\n"
+            f"{text}\n"
             f"📅 Сегодня: {ru_days[now.weekday()]}\n"
             f"⏰ Сейчас: {now.strftime('%H:%M')}\n"
         )
