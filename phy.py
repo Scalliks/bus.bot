@@ -191,11 +191,9 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             bus_time = datetime.strptime(t, "%H:%M").replace(
             year=now.year, month=now.month, day=now.day, tzinfo=sa_timezone
         )
-            if bus_time < now:
-                continue
-            if not next_bus:
+            if bus_time >= now and not next_bus:
                 next_bus = bus_time
-            elif not following_bus:
+            elif bus_time >= now and next_bus and not following_bus:
                 following_bus = bus_time
 
         msg_text = ( 
